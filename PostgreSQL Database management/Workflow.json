@@ -1,0 +1,487 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        -304
+      ],
+      "id": "2d037173-e0e7-4506-afcc-1a205928760a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE USER n8nuser WITH PASSWORD 'n8nuserP@ssw0rd';\nGRANT ALL PRIVILEGES ON DATABASE n8n TO n8nuser;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -848,
+        -496
+      ],
+      "id": "daf58c38-648d-44d8-bddb-5f3043715434",
+      "name": "CREATE USERNAME",
+      "credentials": {
+        "postgres": {
+          "id": "EW4n1ZCSgQ1igQte",
+          "name": "n8n Postgres root account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE itteamtb(\n  ID            INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  CHATID        VARCHAR(10),\n  USERNAME      VARCHAR(100),\n  CREATED_DATE  TIMESTAMP DEFAULT NOW(),\n  MODIFIED_DATE TIMESTAMP\n);",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -848,
+        -304
+      ],
+      "id": "00f24846-1976-4364-be8c-5c5b3af8a2e9",
+      "name": "CREATE TABLE",
+      "credentials": {
+        "postgres": {
+          "id": "EW4n1ZCSgQ1igQte",
+          "name": "n8n Postgres root account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "MANAGE USER",
+        "formDescription": "MANAGE USER",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "CHATID",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "USERNAME"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -432,
+        -144
+      ],
+      "id": "12e1e717-18fe-4a83-badb-781ac00a405f",
+      "name": "On form submission",
+      "webhookId": "1439d217-29ef-473c-90fa-bb69d3bf6abe"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "admintb",
+          "mode": "list",
+          "cachedResultName": "admintb"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "chatid",
+              "value": "={{ $json.CHATID }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -176,
+        -512
+      ],
+      "id": "a9bbbd14-ac15-4761-a447-3b7629f6fc19",
+      "name": "Select rows from a table",
+      "credentials": {
+        "postgres": {
+          "id": "EW4n1ZCSgQ1igQte",
+          "name": "n8n Postgres root account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "admintb",
+          "mode": "list",
+          "cachedResultName": "admintb"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "chatid",
+              "value": "={{ $json.CHATID }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -160,
+        304
+      ],
+      "id": "ce4da731-5df5-46ba-8037-18d9c1ddcd36",
+      "name": "Delete table or rows",
+      "credentials": {
+        "postgres": {
+          "id": "EW4n1ZCSgQ1igQte",
+          "name": "n8n Postgres root account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DROP TABLE itteamtb;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -848,
+        -80
+      ],
+      "id": "e909f2c4-f4fd-4159-b890-f18e392a0002",
+      "name": "Delete Table in n8n database",
+      "credentials": {
+        "postgres": {
+          "id": "EW4n1ZCSgQ1igQte",
+          "name": "n8n Postgres root account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "admintb",
+          "mode": "list",
+          "cachedResultName": "admintb"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatid": "={{ $json.CHATID }}",
+            "username": "={{ $json.USERNAME }}",
+            "modified_date": "={{ $json.submittedAt }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chatid",
+              "displayName": "chatid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_date",
+              "displayName": "created_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "modified_date",
+              "displayName": "modified_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -176,
+        -336
+      ],
+      "id": "bf32bf95-f0f3-4ed4-adde-4342b57b1603",
+      "name": "Insert rows in aadmin table",
+      "credentials": {
+        "postgres": {
+          "id": "EW4n1ZCSgQ1igQte",
+          "name": "n8n Postgres root account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "itteamtb",
+          "mode": "list",
+          "cachedResultName": "itteamtb"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatid": "={{ $json.CHATID }}",
+            "username": "={{ $json.USERNAME }}",
+            "modified_date": "={{ $json.submittedAt }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chatid",
+              "displayName": "chatid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_date",
+              "displayName": "created_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "modified_date",
+              "displayName": "modified_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -176,
+        64
+      ],
+      "id": "dcaeacde-cf3e-49de-a40d-efdedf05cab4",
+      "name": "Insert rows in IT Team table",
+      "credentials": {
+        "postgres": {
+          "id": "EW4n1ZCSgQ1igQte",
+          "name": "n8n Postgres root account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fronttb",
+          "mode": "list",
+          "cachedResultName": "fronttb"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatid": "={{ $json.CHATID }}",
+            "username": "={{ $json.USERNAME }}",
+            "modified_date": "={{ $json.submittedAt }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chatid",
+              "displayName": "chatid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_date",
+              "displayName": "created_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "modified_date",
+              "displayName": "modified_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -176,
+        -144
+      ],
+      "id": "354bc2e5-242e-4c6c-b323-2a7d1346d79d",
+      "name": "Insert rows in fronttb table",
+      "credentials": {
+        "postgres": {
+          "id": "EW4n1ZCSgQ1igQte",
+          "name": "n8n Postgres root account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        []
+      ]
+    },
+    "CREATE TABLE": {
+      "main": [
+        []
+      ]
+    },
+    "On form submission": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateId": "rag-starter-template",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aa218203d086ea8eaff72956a83eb625ed41f6b8c43834ee8ba57a3ba1b6a269"
+  }
+}
