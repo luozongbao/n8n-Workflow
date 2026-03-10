@@ -1,0 +1,150 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Convert image to base 64",
+        "formDescription": "Convert image to base 64",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Image",
+              "fieldType": "file",
+              "acceptFileTypes": ".jpg, .png",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        -80
+      ],
+      "id": "d5c0f4c3-05f0-435a-8926-083536f9e916",
+      "name": "On form submission",
+      "webhookId": "7f9f560e-4c88-44aa-813b-afb1502a982b"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "binaryPropertyName": "={{ $('On form submission').item.binary.Image }}",
+        "options": {
+          "encoding": "base64"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        -80
+      ],
+      "id": "2d4ef98b-c06e-41b7-9ab7-57ba5790c2c0",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "formTitle": "Base64 to image",
+        "formDescription": "Base64 to image",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Base64Text",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        96
+      ],
+      "id": "f8f19f26-6a55-4e88-bedb-d9d2a02aca68",
+      "name": "On form submission1",
+      "webhookId": "eda2c59d-4fda-4f25-90c3-c3efc52c3ac5"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "Base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        96
+      ],
+      "id": "366ec40d-0cee-4359-9b2d-d66de90d86c3",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "93bc5a55-43af-4697-88fd-d1db4135355b",
+              "name": "Base64",
+              "value": "={{ $json[\"Base64Text\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        96
+      ],
+      "id": "2270fc92-d91b-4c7e-af5c-0ba35fa04825",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aa218203d086ea8eaff72956a83eb625ed41f6b8c43834ee8ba57a3ba1b6a269"
+  }
+}
