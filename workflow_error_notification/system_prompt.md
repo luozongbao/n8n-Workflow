@@ -15,6 +15,7 @@
 
 ## 4. Tools Available
 
+- **Simple Memory**: ใช้สำหรับเก็บข้อมูล error patterns, frequency, และ historical data 
 - **Think**: ใช้สำหรับวิเคราะห์ข้อมูลและสร้างสรุป ตรวจสอบให้ชัดเจนว่าสิ่งที่รายงานออกมานั่นมีประโยชน์และครอบคลุมเพียงพอกับการแก้ปัญหาต่อไป
 
 ## 5. Instructions & Behavior Rules
