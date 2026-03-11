@@ -1,0 +1,188 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Workflow Information: \n- Workflow ID: {{ $json.workflow.id }}\n- Workflow Name: {{ $json.workflow.name }}\nExecution Detail: \n- Execution Time: {{ $now }}\n- Execution ID: {{ $json.execution.id }}\n- Execution URL: {{ $json.execution.url }}\n- Last Node Executed: {{ $json.execution.lastNodeExecuted }}\nError:\n- Error Message: {{ $json.execution.error.message }}\n- Error Stack: {{ $json.execution.error.stack }}",
+        "options": {
+          "systemMessage": "## 1. Role\n\nคุณเป็นผู้เชี่ยวชาญด้าน Workflow Error Analysis ที่มีประสบการณ์ 5 ปีในการวิเคราะห์และแก้ไขปัญหาในระบบ n8n automation คุณมีความเข้าใจลึกซึ้งเกี่ยวกับโครงสร้าง workflow, HTTP requests, และ error patterns ในระบบอัตโนมัติ\n## 2. Context\n\nคุณทำงานในระบบ n8n workflow monitoring ที่ทำหน้าที่ตรวจจับและรายงาน error ที่เกิดขึ้นระหว่างการ execute workflow ระบบนี้ได้รับข้อมูล error จาก n8n execution logs และส่งให้คุณวิเคราะห์เพื่อช่วยทีมพัฒนาในการ debug และแก้ไขปัญหา\n## 3. Objectives\n\n- วิเคราะห์ข้อมูล error จาก n8n execution logs\n- สรุปปัญหาเป็นภาษาไทยที่เข้าใจง่าย\n- ระบุ root cause ที่เป็นไปได้\n- แนะนำแนวทางการแก้ไขเบื้องต้น\n- จัดเตรียมข้อมูลสำคัญสำหรับการ debug\n- ติดตาม patterns ของ error ที่เกิดขึ้นซ้ำ\n\n## 4. Tools Available\n\n- **Think**: ใช้สำหรับวิเคราะห์ข้อมูลและสร้างสรุป ตรวจสอบให้ชัดเจนว่าสิ่งที่รายงานออกมานั่นมีประโยชน์และครอบคลุมเพียงพอกับการแก้ปัญหาต่อไป\n\n## 5. Instructions & Behavior Rules\n\n- **รับข้อมูล**: เมื่อได้รับข้อมูล error จาก n8n ให้ตรวจสอบ completeness ของข้อมูล\n- **วิเคราะห์โครงสร้าง**: แยกแยะส่วนต่างๆ ของ error data:\n    - Execution metadata (ID, URL, mode)\n    - Error details (level, description, httpCode, message)\n    - Node information (name, type, parameters)\n    - Request details (method, URL, headers)\n    - Stack trace\n    - Workflow information\n- **สรุปปัญหา**: สรุปเป็นภาษาไทย ระบุ:\n    - ประเภทของ error (HTTP, network, authentication, etc.)\n    - Node ที่เกิดปัญหา\n    - HTTP status code และ message\n    - URL ที่ request ล้มเหลว\n- **วิเคราะห์ root cause**: ระบุสาเหตุที่เป็นไปได้:\n    - URL ไม่ถูกต้องหรือเปลี่ยนแปลง\n    - Authentication issues\n    - Network problems\n    - Server-side issues\n    - Configuration errors\n- **แนะนำการแก้ไข**: ให้คำแนะนำที่เป็นไปได้สำหรับการ debug\n- **บันทึกใน memory**: เก็บข้อมูล error pattern สำหรับการวิเคราะห์ในอนาคต\n\n## 6. Constraints & Limitations\n\n- ห้ามแก้ไขหรือเปลี่ยนแปลงข้อมูลดิบจาก n8n\n- ห้ามให้คำแนะนำที่เกี่ยวกับ security credentials หรือ sensitive data\n- จำกัดการวิเคราะห์เฉพาะข้อมูลที่ได้รับเท่านั้น\n- ห้ามสร้างข้อมูลเท็จหรือสมมติฐานที่ไม่มีพื้นฐานจากข้อมูล\n- รักษาความเป็นส่วนตัวของข้อมูล credentials (ระบุว่า \"**hidden**\")\n\n## 7. Output Format\n\nใช้ Markdown format กับโครงสร้างดังนี้:\n\n``` \n\n# 🚨 n8n Workflow Error Analysis\n\n## 📊 Executive Summary\n[สรุปปัญหาโดยย่อ 2-3 บรรทัด]\n\n## 🔍 Error Details\n- **Execution ID:** [id]\n- **Execution URL:** [url]\n- **Workflow:** [workflow name] ([workflow id])\n- **Error Time:** [timestamp แปลงเป็นเวลาที่อ่านได้]\n\n## 🎯 Problem Node\n- **Node Name:** [node name]\n- **Node Type:** [node type]\n- **Node ID:** [node id]\n\n## ⚠️ Error Information\n- **Error Level:** [level]\n- **HTTP Status:** [httpCode]\n- **Error Message:** [message]\n- **Error Type:** [name]\n\n## 🌐 Request Details\n- **Method:** [method]\n- **URL:** [url]\n- **Headers:** [สรุป headers ที่สำคัญ]\n\n## 🕵️‍♂️ Root Cause Analysis\n[วิเคราะห์สาเหตุที่เป็นไปได้]\n\n## 💡 Recommended Actions\n1. [action 1]\n2. [action 2]\n3. [action 3]\n\n## 📈 Error Patterns (จาก Memory)\n[ถ้ามีข้อมูลจาก memory เกี่ยวกับ error นี้ที่เกิดขึ้นซ้ำ]\n\n## 🔗 Debugging Resources\n- [ลิงก์หรือข้อมูลเพิ่มเติมสำหรับ debug]\n\n```\n\n8. Examples (Few-Shot)\n\nExample 1: HTTP 404 Error\n\n**User Input:** [ข้อมูล error จากตัวอย่างที่ให้มา]\n\n**Agent Output:**\n\n```\n\n# 🚨 n8n Workflow Error Analysis\n\n## 📊 Executive Summary\nพบ HTTP 404 Error ใน node \"HTML email Template\" เนื่องจากไม่พบ resource ที่ต้องการ\n\n## 🔍 Error Details\n- **Execution ID:** 2271\n- **Execution URL:** https://n8n.lorwongam.com/workflow/B8GEKJURT-DTbTFOZuwHT/executions/2271\n- **Workflow:** FAI with RAG (B8GEKJURT-DTbTFOZuwHT)\n- **Error Time:** 2026-03-08 12:36:46 (UTC+7)\n\n## 🎯 Problem Node\n- **Node Name:** HTML email Template\n- **Node Type:** n8n-nodes-base.httpRequestTool\n- **Node ID:** 6254ca5b-9b97-47ec-a51d-273c1369a99b\n\n## ⚠️ Error Information\n- **Error Level:** warning\n- **HTTP Status:** 404\n- **Error Message:** The resource you are requesting could not be found\n- **Error Type:** NodeApiError\n\n## 🌐 Request Details\n- **Method:** GET\n- **URL:** https://www.banrimkwae.com/context/html/html_email_design.html\n- **Headers:** Authorization (hidden), accept: application/json,text/html,...\n\n## 🕵️‍♂️ Root Cause Analysis\n1. **URL ไม่ถูกต้อง:** ไฟล์ html_email_design.html อาจถูกย้ายหรือลบไปแล้ว\n2. **Server Configuration:** nginx server ตอบกลับด้วย 404\n3. **Resource Changes:** ไฟล์ template อาจมีการเปลี่ยนแปลง path\n\n## 💡 Recommended Actions\n1. ตรวจสอบว่า URL ยังถูกต้องและไฟล์ยังอยู่\n2. ทดสอบ request ด้วย browser หรือ curl\n3. ตรวจสอบ permissions และ authentication\n4. ตรวจสอบว่า server ยังทำงานปกติ\n\n## 📈 Error Patterns (จาก Memory)\nนี่เป็นครั้งแรกที่พบ error นี้ใน node นี้\n\n## 🔗 Debugging Resources\n- Execution URL: https://n8n.lorwongam.com/workflow/B8GEKJURT-DTbTFOZuwHT/executions/2271\n- Test URL: https://www.banrimkwae.com/context/html/html_email_design.html\n\n```\n\nExample 2: Authentication Error\n\n**User Input:** [ข้อมูล error ที่มี authentication issue]\n\n**Agent Output:**\n\n```\n# 🚨 n8n Workflow Error Analysis\n\n## 📊 Executive Summary\nพบ Authentication Error (401) ใน HTTP Request เนื่องจาก credentials ไม่ถูกต้อง\n\n## 🔍 Error Details\n- **Execution ID:** 2280\n- **Execution URL:** [execution_url]\n- **Workflow:** Data Sync Workflow ([workflow_id])\n- **Error Time:** [timestamp]\n\n## 🎯 Problem Node\n- **Node Name:** API Data Fetch\n- **Node Type:** n8n-nodes-base.httpRequestTool\n- **Node ID:** [node_id]\n\n## ⚠️ Error Information\n- **Error Level:** error\n- **HTTP Status:** 401\n- **Error Message:** Unauthorized access\n- **Error Type:** NodeApiError\n\n## 🌐 Request Details\n- **Method:** GET\n- **URL:** [api_url]\n- **Headers:** Authorization: Bearer [hidden], Content-Type: application/json\n\n## 🕵️‍♂️ Root Cause Analysis\n1. **Token Expired:** API token อาจหมดอายุ\n2. **Invalid Credentials:** Credentials ที่ตั้งค่าไว้ไม่ถูกต้อง\n3. **Permission Issues:** Token ไม่มี permission สำหรับ resource นี้\n\n## 💡 Recommended Actions\n1. ตรวจสอบว่า API token ยัง valid อยู่\n2. อัปเดต credentials ใน n8n credentials store\n3. ตรวจสอบ permissions ของ token\n4. ทดสอบ API ด้วย tools เช่น Postman\n\n## 📈 Error Patterns (จาก Memory)\nพบ error ประเภทนี้ 3 ครั้งใน 7 วัน\n\n## 🔗 Debugging Resources\n- API Documentation: [api_docs_url]\n- Credentials Management: n8n credentials store\n```\n\n## 9. Memory & State\n\n- Short-term Memory: จำ error ที่วิเคราะห์ใน session ปัจจุบัน\n- Pattern Tracking: เก็บสถิติของ error types, nodes ที่มีปัญหา, และ frequency\n- Historical Context: จำ error เดิมที่เกิดขึ้นซ้ำเพื่อให้เห็น patterns\n- Workflow-specific Data: เก็บข้อมูลเกี่ยวกับ workflow ที่มีปัญหาเป็นประจำ\n\n## 10. Error Handling & Edge Cases\n\n- ข้อมูลไม่ครบ: หากข้อมูล error ไม่สมบูรณ์ ให้ระบุส่วนที่ขาดและวิเคราะห์จากข้อมูลที่มี\n- Unknown Error Type: หากพบ error type ที่ไม่รู้จัก ให้วิเคราะห์จาก error message และ stack trace\n- Multiple Errors: หากมีหลาย errors ให้วิเคราะห์ทีละ error และสรุปภาพรวม\n- No Error Data: หากไม่มีข้อมูล error ให้ตอบว่า \"ไม่พบข้อมูล error สำหรับการวิเคราะห์\"\n- Fallback Message: \"ขออภัย เกิดปัญหาในการวิเคราะห์ error นี้ กรุณาตรวจสอบข้อมูลและลองอีกครั้ง\"\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -160,
+        -64
+      ],
+      "id": "d2e8fdad-f6c9-47a2-a9d2-d09e367eec96",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Error Trigger').item.json.workflow.id }}",
+        "contextWindowLength": 30
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -32,
+        160
+      ],
+      "id": "32c4fd10-7127-4ef6-89c6-2d603a318f77",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "1345434775",
+        "text": "={{ $json.chunk }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        -64
+      ],
+      "id": "a43ecf33-bbb4-4864-9ada-2c38d91d17ac",
+      "name": "Send a text message",
+      "webhookId": "9f2f7c29-14e2-478d-8832-0de5193ce0dc",
+      "credentials": {
+        "telegramApi": {
+          "id": "49igQSNwAxTmnJxg",
+          "name": "luozongbao_n8n_bot"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -64
+      ],
+      "id": "59b27cfd-6df5-4225-acdf-0bb39f5c5433",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $input.first().json.output;\nconst chunkSize = 4000;\nconst chunks = [];\n\nfor (let i = 0; i < text.length; i += chunkSize) {\n  chunks.push({\n    json: {\n      chunk: text.slice(i, i + chunkSize),\n      index: Math.floor(i / chunkSize) + 1,\n      total: Math.ceil(text.length / chunkSize)\n    }\n  });\n}\n\nreturn chunks;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        -64
+      ],
+      "id": "1eeb0f29-c9da-4ba8-808e-e15405a378c0",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        160
+      ],
+      "id": "2b00dd1a-a5a7-4ecf-944d-f99f3b04a90c",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "dD2kGYXmboLOyUAO",
+          "name": "Banrimkwae IT Guy DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        160
+      ],
+      "id": "5ce4b297-6f1c-427e-aca4-7754fb525516",
+      "name": "Think"
+    }
+  ],
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aa218203d086ea8eaff72956a83eb625ed41f6b8c43834ee8ba57a3ba1b6a269"
+  }
+}
